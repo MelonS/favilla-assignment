@@ -55,6 +55,8 @@
 - [x] **실제 브라우저(headless Edge) 렌더로 검증** → `VERIFY PASS {5개 전부 true}` (타워 t=51 파괴)
 - [x] README: 전장 **GIF**(`docs/battle.gif`) + 스크린샷 + 3가지 실행법
 - [x] **실행파일(.exe, win-x64 self-contained)** 빌드 → GitHub Release 자산 업로드
+- [x] **GitHub Pages 배포** → 링크 한 번으로 브라우저에서 바로 실행 (랜딩 + 전장)
+  - https://melons.github.io/favilla-assignment/
 
 ---
 
