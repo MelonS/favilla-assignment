@@ -150,7 +150,7 @@ classDiagram
     Unit <|-- Minion
     Unit <|-- Tower
     Unit ..|> IDamageable
-    Unit o-- "1" Health : 조합(composition)
+    Unit o-- "1" Health : composition
     Health ..|> IHealthReadOnly
     Health ..|> IDamageable
 ```
@@ -221,18 +221,18 @@ private int GetProperAttackDamageBy(int gameSeconds) => 10 + gameSeconds / 2;
 
 ```mermaid
 flowchart LR
-    subgraph 코어["코어 (작동) — Battle / Core"]
+    subgraph core["코어 · 작동 · Battle / Core"]
         Unit["Unit / Champion<br/>Minion / Tower"]
-        Health["Health<br/>(작동하는 코어)"]
-        Unit -- "소유(조합)" --> Health
+        Health["Health<br/>작동하는 코어"]
+        Unit -->|소유·조합| Health
     end
-    subgraph 표시["표시 (UI)"]
-        HPBar["HPBar<br/>(보여주는 객체)"]
+    subgraph ui["표시 · UI"]
+        HPBar["HPBar<br/>보여주는 객체"]
     end
-    Abstraction["«interface»<br/>IHealthReadOnly<br/>(Current / Max / Changed)"]
+    Abstraction["«interface»<br/>IHealthReadOnly<br/>Current / Max / Changed"]
 
-    Health -. "구현" .-> Abstraction
-    HPBar == "Bind & 구독" ==> Abstraction
+    Health -.->|구현| Abstraction
+    HPBar ==>|Bind·구독| Abstraction
 
     style Abstraction fill:#fff3bf,stroke:#f08c00,stroke-width:2px
     style HPBar fill:#d0ebff,stroke:#1971c2
@@ -254,7 +254,7 @@ sequenceDiagram
     Note over Bar,H: 사전 — Bar.Bind(unit.Health) 로 Changed 구독
     Atk->>H: TakeDamage(amount)
     H->>H: Current 갱신 · 클램프 · 사망 판정
-    H-->>Bar: Changed(HealthSnapshot{Current, Max})
+    H-->>Bar: Changed(HealthSnapshot)
     Bar->>Bar: RefreshHP(snapshot.Current)
     Note over Atk,Bar: 유닛/공격자는 Bar의 존재를 전혀 모른다
 ```
