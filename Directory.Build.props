@@ -1,0 +1,7 @@
+<Project>
+  <!-- netcoreapp3.1 / netstandard2.1은 EOL 타깃이라 NETSDK1138 경고가 뜬다.
+       (과제 환경의 설치 SDK가 3.1이라 의도적으로 그 타깃을 사용) — 로그 정리용 억제. -->
+  <PropertyGroup>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+</Project>

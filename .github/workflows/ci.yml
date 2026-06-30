@@ -8,7 +8,9 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    # .NET Core 3.1 런타임은 OpenSSL 1.x 의존 → 최신 ubuntu(OpenSSL 3.x)에선 테스트 호스트가 크래시.
+    # Windows 러너는 SChannel을 써서 libssl 이슈가 없어 3.1 타깃을 안정적으로 빌드/테스트한다.
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
