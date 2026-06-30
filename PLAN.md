@@ -37,11 +37,19 @@
 - [x] 폴더 구조 / 확장성 / 빌드·테스트 결과 시각화
 
 ## 5. 배포
-- [ ] GitHub **public** 저장소 생성 + 코드 push
-- [ ] 제출용 단일 압축 파일(zip) 생성 + GitHub Release 첨부
-- [ ] README에 압축 파일 **다운로드 링크** 추가
+- [x] GitHub **public** 저장소 생성 + 코드 push → https://github.com/MelonS/mtm-unit-design
+- [x] 제출용 단일 압축 파일(zip) 생성 + GitHub Release(v1.0) 첨부
+- [x] README에 압축 파일 **다운로드 링크** 추가
 
 ## 6. 마무리 검증
-- [x] `dotnet build` / `dotnet test` / 시뮬레이션 실행 전부 통과 (로컬)
-- [ ] GitHub Actions CI 그린 확인
-- [ ] README 링크·다이어그램 렌더링 확인
+- [x] `dotnet build` / `dotnet test`(22/22) / 시뮬레이션 실행 전부 통과 (로컬)
+- [x] GitHub Actions CI 그린 확인 (windows-latest, 빌드+테스트+시뮬 스모크)
+- [x] README 링크·다이어그램(Mermaid)·릴리스 자산 확인
+
+---
+
+## ✅ 최종 산출물
+- **저장소(public):** https://github.com/MelonS/mtm-unit-design
+- **제출 zip:** https://github.com/MelonS/mtm-unit-design/releases/latest/download/mtm-unit-design-submission.zip
+- **핵심 설계:** Champion/Minion/Tower (사망 정책 분기) + 유닛↔HPBar 디커플링(Observer+DIP)
+- **+@:** 결정론적 콘솔 시뮬레이션(자기검증), xUnit 22개(행동+구조), CI(windows-latest)
