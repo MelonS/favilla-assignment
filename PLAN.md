@@ -7,7 +7,7 @@
 ---
 
 ## 0. 환경 확인 (완료)
-- [x] TODO 폴더 4개 파일 정독 (`사전 과제 설명.txt`, `BattleManager.cs`, `DummyMonoBehaviour.cs`, `HPBar.cs`)
+- [x] TODO 폴더 4개 파일 정독 (`assignment-brief.txt`, `BattleManager.cs`, `DummyMonoBehaviour.cs`, `HPBar.cs`)
 - [x] .NET Core 3.1 SDK / git / GitHub 토큰(repo scope, 계정 `MelonS`) 확인
 - [x] MelonS-Agents 저장소 관련성 검토
 

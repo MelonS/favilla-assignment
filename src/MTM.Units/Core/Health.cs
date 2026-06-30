@@ -46,8 +46,14 @@ namespace Core
 
         public void SetMax(int max, bool refill = false)
         {
-            Max = Math.Max(1, max);
+            int newMax = Math.Max(1, max);
+            bool maxChanged = newMax != Max;
+            Max = newMax;
+            int before = Current;
             Apply(refill ? Max : Current);
+            // Max만 바뀌고 Current가 그대로면 Apply가 통지하지 않으므로, 분모(Max) 갱신을 위해 1회 강제 통지.
+            if (maxChanged && Current == before)
+                Changed?.Invoke(new HealthSnapshot(Current, Max));
         }
 
         private void Apply(int next)

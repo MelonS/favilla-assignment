@@ -3,6 +3,10 @@
 > **파빌라(Favilla) 사전과제** · MTM 프로젝트 인게임 유닛 설계 테스트
 > 챔피언 · 미니언 · 타워의 **사망 정책 분기**와, 유닛 ↔ HPBar **완전 디커플링** 설계.
 
+<p align="center">
+  <a href="https://melons.github.io/favilla-assignment/"><img src="https://img.shields.io/badge/%E2%96%B6%20LIVE%20DEMO-Play%20in%20your%20browser-2ea44f?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Demo — 브라우저에서 바로 실행"></a>
+</p>
+
 <p>
   <img src="https://img.shields.io/badge/.NET-netstandard2.1%20%7C%20netcoreapp3.1-512BD4?logo=dotnet&logoColor=white" alt=".NET">
   <img src="https://img.shields.io/badge/language-C%23%208.0-178600?logo=csharp&logoColor=white" alt="C#">
@@ -10,6 +14,7 @@
   <img src="https://img.shields.io/badge/Unity-droppable%20(netstandard2.1)-000000?logo=unity&logoColor=white" alt="Unity">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
   <a href="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml"><img src="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://melons.github.io/favilla-assignment/"><img src="https://img.shields.io/badge/live%20demo-online-2ea44f?logo=googlechrome&logoColor=white" alt="Live Demo"></a>
 </p>
 
 ### 🎮 [▶ 라이브 데모 바로 실행 (브라우저)](https://melons.github.io/favilla-assignment/)
@@ -73,7 +78,7 @@ dotnet test
 
 > **정밀 검증용 시각화.** 동일한 설계를 **JS로 그대로 포팅**해, 실제 유닛이 단일 라인 지형(잔디·길·강·양 진영 베이스) 위를
 > 이동·교전하는 모습을 설치 없이 브라우저에서 직접 조작·검증할 수 있습니다. 머리 위 HP 막대는 모두
-> `HPBar.bind(unit.health)` **관찰자**로 구동되고(유닛은 막대를 모름), 시나리오는 .NET 시뮬레이션과 **결정론적으로 동일**합니다.
+> `HPBar.bind(unit.health)` **관찰자**로 구동됩니다(유닛은 막대를 모름). 콘솔 시뮬레이션과 **동일한 설계·동일한 공식**(미니언 ATK=10+⌊t/2⌋, 챔피언 ATK=60+(Lv−1)·8, 사망 정책)을 공유하지만, **튜닝 상수·전투 모델·시나리오는 서로 다른** 별개의 전장입니다(웹=연속 실시간 STEP=1/30, 콘솔=1초 이산 턴).
 
 ![MTM Battle — 탑다운 전장 데모](docs/battle.gif)
 

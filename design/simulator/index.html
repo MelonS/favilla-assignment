@@ -319,7 +319,7 @@ function drawUnit(a){
 
   if(u.kind==='tower'){
     const r=a.radius;
-    ctx.beginPath();ctx.roundRect(x-r,y-r,2*r,2*r,6);
+    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x-r,y-r,2*r,2*r,6);else ctx.rect(x-r,y-r,2*r,2*r);
     ctx.fillStyle=destroyed?'#3a4252':col+'cc';ctx.fill();
     ctx.lineWidth=3;ctx.strokeStyle=destroyed?'#5b6b86':'#0b1020';ctx.stroke();
     ctx.font='20px serif';ctx.textAlign='center';ctx.textBaseline='middle';

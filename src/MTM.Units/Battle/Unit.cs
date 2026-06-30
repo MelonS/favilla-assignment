@@ -47,7 +47,7 @@ namespace Battle
         /// <summary>피해를 받는다. (전투 코드가 IDamageable로 호출 — 유닛 타입을 몰라도 됨)</summary>
         public void TakeDamage(int amount)
         {
-            if (State != UnitState.Alive) return;   // 죽었거나 부활 대기 중이면 무시
+            if (State != UnitState.Alive) return;   // Alive 상태에서만 피해를 받는다 (Spawning/Reviving/Destroyed는 모두 무시)
             _health.TakeDamage(amount);
         }
 

@@ -30,8 +30,9 @@ namespace UI
         /// </summary>
         public void Bind(IHealthReadOnly source)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));   // 검증 먼저: 실패해도 기존 바인딩 보존
             Unbind();   // 재바인딩 안전: 이전 구독을 먼저 해제
-            _source = source ?? throw new ArgumentNullException(nameof(source));
+            _source = source;
             _source.Changed += OnHealthChanged;
             _maxHP = source.Max;
             RefreshHP(source.Current);   // 초기 동기화

@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # 진행 중인 프로덕션 배포는 끝까지 완료시킨다 (대기 중 최신 실행은 자동으로 이전 대기를 대체). GitHub 공식 Pages 권장값.
+  cancel-in-progress: false
 
 jobs:
   deploy:

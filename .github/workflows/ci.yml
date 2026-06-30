@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+# 최소 권한: 이 워크플로는 코드 읽기/빌드/테스트만 수행하므로 read-only로 제한.
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     # .NET Core 3.1 런타임은 OpenSSL 1.x 의존 → 최신 ubuntu(OpenSSL 3.x)에선 테스트 호스트가 크래시.
