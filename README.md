@@ -12,6 +12,11 @@
   <a href="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml"><img src="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
+### 🎮 [▶ 라이브 데모 바로 실행 (브라우저)](https://melons.github.io/favilla-assignment/)
+
+> 설치 없이 클릭 한 번 — 실제 유닛이 지형 위에서 전투하는 **탑다운 전장**이 브라우저에서 바로 실행됩니다.
+> 🔗 **https://melons.github.io/favilla-assignment/**  ·  [전장 바로가기](https://melons.github.io/favilla-assignment/design/simulator/index.html)
+
 ---
 
 ## 📌 한눈에 보기 (TL;DR)
