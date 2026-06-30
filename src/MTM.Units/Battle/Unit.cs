@@ -60,8 +60,8 @@ namespace Battle
 
         private void OnDied()
         {
-            State = UnitState.Reviving; // 임시 상태; HandleDeath에서 타입별로 확정
-            HandleDeath();              // ← 챔피언=부활 / 미니언=소멸 / 타워=영구파괴
+            // 사망 순간의 '행동'과 '최종 상태'를 모두 타입별 HandleDeath가 소유한다.
+            HandleDeath();   // ← 챔피언=부활(Reviving) / 미니언=소멸(Destroyed) / 타워=영구파괴(Destroyed)
         }
 
         /// <summary>사망 시 행동. 하위 타입이 반드시 구현한다.</summary>
