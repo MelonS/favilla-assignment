@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MTM Battle Visualizer — 파빌라 사전과제</title>
+<meta name="description" content="MTM 인게임 유닛 설계 (Champion/Minion/Tower) — 탑다운 전장 라이브 시각화" />
+<style>
+  :root{--bg:#0b1020;--panel:#121a2e;--line:#23304d;--ink:#e7eefb;--muted:#90a3c2;--blue:#3b82f6;--champ:#a78bfa;--green:#22c55e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:radial-gradient(1100px 640px at 50% -8%,#16203a 0%,var(--bg) 60%);color:var(--ink);
+    font-family:"Segoe UI",Roboto,"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;}
+  .wrap{max-width:900px;margin:0 auto;padding:46px 22px 60px;text-align:center}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:var(--bg);background:linear-gradient(90deg,var(--blue),var(--champ));padding:4px 12px;border-radius:999px;margin-bottom:16px}
+  h1{font-size:30px;margin:0 0 8px;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:14.5px;line-height:1.6;max-width:640px;margin:0 auto 26px}
+  .sub code{background:#0c1426;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#cdd9f0}
+  .hero{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.45);background:#0a1322}
+  .hero img{display:block;width:100%}
+  .cta{display:inline-flex;align-items:center;gap:10px;margin:26px 0 10px;font-size:17px;font-weight:800;color:#fff;
+    text-decoration:none;background:linear-gradient(90deg,var(--blue),#2563eb);padding:15px 30px;border-radius:14px;
+    box-shadow:0 10px 30px rgba(59,130,246,.35);transition:.16s}
+  .cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+  .links a{color:var(--ink);text-decoration:none;font-size:13px;font-weight:600;background:#161f38;border:1px solid var(--line);padding:9px 15px;border-radius:10px;transition:.15s}
+  .links a:hover{background:#1f2c4f;border-color:#34467a}
+  .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:34px 0 4px;text-align:left}
+  @media(max-width:640px){.feat{grid-template-columns:1fr}}
+  .feat .c{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .feat .c b{display:block;margin-bottom:4px;font-size:14px}
+  .feat .c span{color:var(--muted);font-size:12.5px;line-height:1.5}
+  footer{margin-top:34px;color:var(--muted);font-size:12.5px;line-height:1.8}
+  footer a{color:#9cc2ff;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="tag">파빌라 사전과제 · MTM 인게임 유닛 설계</span>
+  <h1>⚔️ MTM Battle Visualizer</h1>
+  <p class="sub">
+    <code>Champion</code> · <code>Minion</code> · <code>Tower</code> 설계를 그대로 포팅한 <b>탑다운 전장</b>.
+    실제 유닛이 지형 위를 이동·교전하며, 5개 요구사항을 라이브로 자기검증합니다.
+  </p>
+
+  <div class="hero"><img src="docs/battle.gif" alt="MTM 전장 데모" /></div>
+
+  <a class="cta" href="design/simulator/index.html">▶ 라이브 전장 실행</a>
+  <div class="sub" style="margin:6px auto 0;font-size:12.5px">설치 불필요 · 브라우저에서 바로 ▶ 재생</div>
+
+  <div class="links">
+    <a href="design/components/hp-bar.html">🩸 HP바 컴포넌트</a>
+    <a href="design/components/unit-card.html">🃏 유닛 카드</a>
+    <a href="design/foundations/tokens.html">🎨 디자인 토큰</a>
+    <a href="https://github.com/MelonS/favilla-assignment">📁 GitHub 저장소</a>
+    <a href="https://github.com/MelonS/favilla-assignment/releases/latest/download/MTM-Battle-Simulation-win-x64.exe">💾 실행파일(.exe)</a>
+  </div>
+
+  <div class="feat">
+    <div class="c"><b>🛡️ Champion</b><span>죽으면 일정 시간 후 <b>부활</b> (Reviving → Alive)</span></div>
+    <div class="c"><b>⚔️ Minion</b><span>죽으면 <b>소멸</b> · 생성 시간 비례 공격력</span></div>
+    <div class="c"><b>🏰 Tower</b><span>죽으면 <b>영구 파괴</b></span></div>
+  </div>
+
+  <footer>
+    유닛 ↔ HPBar 완전 디커플링(Observer + DIP) · .NET(콘솔·22 테스트) 과 동일 동작<br/>
+    <a href="https://github.com/MelonS/favilla-assignment">github.com/MelonS/favilla-assignment</a>
+  </footer>
+</div>
+</body>
+</html>
