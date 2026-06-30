@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/tests-22%20passed-2ea44f?logo=xunit&logoColor=white" alt="tests">
   <img src="https://img.shields.io/badge/Unity-droppable%20(netstandard2.1)-000000?logo=unity&logoColor=white" alt="Unity">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
-  <a href="https://github.com/MelonS/mtm-unit-design/actions/workflows/ci.yml"><img src="https://github.com/MelonS/mtm-unit-design/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml"><img src="https://github.com/MelonS/favilla-assignment/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 ---
@@ -50,8 +50,8 @@
 
 ```bash
 # 1) 클론
-git clone https://github.com/MelonS/mtm-unit-design.git
-cd mtm-unit-design
+git clone https://github.com/MelonS/favilla-assignment.git
+cd favilla-assignment
 
 # 2) 전투 시뮬레이션 실행 (설계가 실제로 도는 모습)
 dotnet run -c Release --project src/MTM.Simulation
@@ -67,7 +67,7 @@ dotnet test
 ## 🗂️ 프로젝트 구조
 
 ```
-mtm-unit-design/
+favilla-assignment/
 ├─ src/
 │  ├─ MTM.Units/                  # ⭐ 핵심 설계 라이브러리 (netstandard2.1)
 │  │  ├─ Core/
@@ -375,10 +375,10 @@ $ dotnet test
 
 > 과제 제출 방식: *"완성된 코드와 README를 하나의 압축 파일로 제출"*
 
-- **📥 제출용 압축 파일(zip):** [최신 릴리스에서 다운로드](https://github.com/MelonS/mtm-unit-design/releases/latest)
-  - 직접 링크: `https://github.com/MelonS/mtm-unit-design/releases/latest/download/mtm-unit-design-submission.zip`
-- **🌐 공개 저장소:** https://github.com/MelonS/mtm-unit-design
-- **📄 소스 아카이브:** [main.zip](https://github.com/MelonS/mtm-unit-design/archive/refs/heads/main.zip)
+- **📥 제출용 압축 파일(zip):** [최신 릴리스에서 다운로드](https://github.com/MelonS/favilla-assignment/releases/latest)
+  - 직접 링크: `https://github.com/MelonS/favilla-assignment/releases/latest/download/favilla-assignment-submission.zip`
+- **🌐 공개 저장소:** https://github.com/MelonS/favilla-assignment
+- **📄 소스 아카이브:** [main.zip](https://github.com/MelonS/favilla-assignment/archive/refs/heads/main.zip)
 
 ---
 

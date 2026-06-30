@@ -37,7 +37,7 @@
 - [x] 폴더 구조 / 확장성 / 빌드·테스트 결과 시각화
 
 ## 5. 배포
-- [x] GitHub **public** 저장소 생성 + 코드 push → https://github.com/MelonS/mtm-unit-design
+- [x] GitHub **public** 저장소 생성 + 코드 push → https://github.com/MelonS/favilla-assignment
 - [x] 제출용 단일 압축 파일(zip) 생성 + GitHub Release(v1.0) 첨부
 - [x] README에 압축 파일 **다운로드 링크** 추가
 
@@ -49,7 +49,7 @@
 ---
 
 ## ✅ 최종 산출물
-- **저장소(public):** https://github.com/MelonS/mtm-unit-design
-- **제출 zip:** https://github.com/MelonS/mtm-unit-design/releases/latest/download/mtm-unit-design-submission.zip
+- **저장소(public):** https://github.com/MelonS/favilla-assignment
+- **제출 zip:** https://github.com/MelonS/favilla-assignment/releases/latest/download/favilla-assignment-submission.zip
 - **핵심 설계:** Champion/Minion/Tower (사망 정책 분기) + 유닛↔HPBar 디커플링(Observer+DIP)
 - **+@:** 결정론적 콘솔 시뮬레이션(자기검증), xUnit 22개(행동+구조), CI(windows-latest)
