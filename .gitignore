@@ -21,3 +21,6 @@ x86/
 # OS
 Thumbs.db
 .DS_Store
+
+# Published self-contained exe (배포는 GitHub Release 자산)
+publish/

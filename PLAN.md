@@ -49,11 +49,12 @@
 ---
 
 ## 7. 라이브 시각화 (추가 목표 — 정밀 검증 + 실행 가능)
-- [x] C# 설계를 JS로 포팅한 **인터랙티브 전투 시뮬레이터** (`design/simulator/index.html`)
+- [x] C# 설계를 JS로 포팅한 **탑다운 전장 시뮬레이터** — 실제 유닛이 지형(잔디·길·강·베이스) 위 이동·교전
 - [x] 디자인 시스템 컴포넌트: 토큰 / HP바(인터랙티브) / 유닛카드
-- [x] **Claude Design** 디자인 시스템 프로젝트 생성 + 4개 파일 동기화
-- [x] **실제 브라우저(headless Edge) 렌더로 검증** → `VERIFY PASS {5개 전부 true}`
-- [x] README 라이브 시각화 섹션 + 스크린샷, `design/README.md`
+- [x] **Claude Design** 디자인 시스템 프로젝트 생성 + 동기화
+- [x] **실제 브라우저(headless Edge) 렌더로 검증** → `VERIFY PASS {5개 전부 true}` (타워 t=51 파괴)
+- [x] README: 전장 **GIF**(`docs/battle.gif`) + 스크린샷 + 3가지 실행법
+- [x] **실행파일(.exe, win-x64 self-contained)** 빌드 → GitHub Release 자산 업로드
 
 ---
 

@@ -64,21 +64,30 @@ dotnet test
 
 ---
 
-## 🕹️ 라이브 시각화 (인터랙티브 · 브라우저에서 바로 실행)
+## 🕹️ 라이브 시각화 — 탑다운 전장 (실제 유닛이 지형 위에서 전투)
 
-> **정밀 검증용 시각화.** 동일한 설계를 **JS로 그대로 포팅**해, 설치 없이 브라우저에서 직접 조작·검증할 수 있습니다.
-> 화면의 모든 HP 막대는 `HPBar.bind(unit.health)` **관찰자**로 구동되고(유닛은 막대를 모름), 시나리오는 .NET 시뮬레이션과 **결정론적으로 동일**합니다.
+> **정밀 검증용 시각화.** 동일한 설계를 **JS로 그대로 포팅**해, 실제 유닛이 단일 라인 지형(잔디·길·강·양 진영 베이스) 위를
+> 이동·교전하는 모습을 설치 없이 브라우저에서 직접 조작·검증할 수 있습니다. 머리 위 HP 막대는 모두
+> `HPBar.bind(unit.health)` **관찰자**로 구동되고(유닛은 막대를 모름), 시나리오는 .NET 시뮬레이션과 **결정론적으로 동일**합니다.
 
-![MTM Battle Visualizer](docs/visualizer.png)
+![MTM Battle — 탑다운 전장 데모](docs/battle.gif)
 
-```bash
-# 설치 불필요 — 파일을 브라우저로 열기만:
-design/simulator/index.html        # ▶ 재생 / 한 틱 / 리셋 / 속도 · 라이브 자기검증 패널
-```
+> 🛡️ 챔피언 **부활** · ⚔️ 미니언 **소멸 / 시간비례 ATK** · 🏰 타워 **영구파괴** 가 실시간 전개됩니다.
+> 실제 브라우저(headless) 렌더에서 `VERIFY PASS {revive, despawn, scaled, tower, hpbar: 전부 true}` 확인 완료.
 
-- **▶ 재생/한 틱/리셋·속도** 컨트롤로 챔피언 부활·미니언 소멸·타워 영구파괴를 눈으로 추적
-- 우측 **자기검증 패널**이 5개 요구사항을 라이브로 ✅ 처리 → 실제 브라우저에서 `VERIFY PASS` 확인 완료
-- 이 시각화는 **[Claude Design](https://claude.ai/design) 디자인 시스템**으로 제작/동기화되었습니다 — 토큰·HP바·유닛카드 컴포넌트로 구성:
+### ▶ 직접 실행해 보기 (3가지, 취향대로)
+
+| 방법 | 실행 | 설치 |
+|---|---|---|
+| 🕹️ **웹 전장** *(추천)* | [`design/simulator/index.html`](design/simulator/index.html) 을 브라우저로 열기 | **불필요** |
+| 💾 **실행파일(.exe)** | [**win-x64 단일 실행파일 다운로드**](https://github.com/MelonS/favilla-assignment/releases/latest/download/MTM-Battle-Simulation-win-x64.exe) → 더블클릭 | **불필요** (self-contained) |
+| 🖥️ **소스에서** | `dotnet run -c Release --project src/MTM.Simulation` | .NET 3.1+ |
+
+![종료 — 타워 영구 파괴 + 전체 요구사항 검증](docs/visualizer.png)
+
+- **▶ 재생 / ⏭ 1초 / ↺ 리셋 / 속도** 컨트롤로 전투를 직접 제어하며 챔피언 부활·미니언 소멸·타워 파괴를 눈으로 추적
+- 우측 **자기검증 패널**이 5개 요구사항을 라이브로 ✅ 처리 → **ALL REQUIREMENTS DEMONSTRATED**
+- [Claude Design](https://claude.ai/design) 디자인 시스템으로 제작/동기화 (토큰·HP바·유닛카드 컴포넌트):
 
 | <img src="docs/design-tokens.png" width="380"/> | <img src="docs/unit-cards.png" width="380"/> |
 |:--:|:--:|
@@ -407,6 +416,7 @@ $ dotnet test
 
 - **📥 제출용 압축 파일(zip):** [최신 릴리스에서 다운로드](https://github.com/MelonS/favilla-assignment/releases/latest)
   - 직접 링크: `https://github.com/MelonS/favilla-assignment/releases/latest/download/favilla-assignment-submission.zip`
+- **💾 실행파일(.exe, win-x64 self-contained):** [다운로드](https://github.com/MelonS/favilla-assignment/releases/latest/download/MTM-Battle-Simulation-win-x64.exe) — .NET 설치 없이 더블클릭 실행
 - **🌐 공개 저장소:** https://github.com/MelonS/favilla-assignment
 - **📄 소스 아카이브:** [main.zip](https://github.com/MelonS/favilla-assignment/archive/refs/heads/main.zip)
 
