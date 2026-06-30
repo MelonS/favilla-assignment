@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,11 +22,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Assemble static site (only what the browser needs)
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r design _site/
+          cp -r docs _site/
+          touch _site/.nojekyll
+
       - uses: actions/configure-pages@v5
-      - name: Upload site (repo root)
+
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
