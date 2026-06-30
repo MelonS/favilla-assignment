@@ -1,0 +1,23 @@
+# .NET build outputs
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.suo
+*.userprefs
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+
+# Test results
+[Tt]est[Rr]esults/
+*.trx
+
+# OS
+Thumbs.db
+.DS_Store

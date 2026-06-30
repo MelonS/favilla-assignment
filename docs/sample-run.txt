@@ -1,0 +1,74 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║   MTM — 인게임 유닛 설계 검증 시뮬레이션  (Champion / Minion / Tower)      ║
+║   Blue  vs  Red   라인 교전 · 결정론적 · Unity 라이프사이클 더미 펌프      ║
+╚══════════════════════════════════════════════════════════════════════════╝
+  t= 0s  [SPAWN] 미니언 웨이브 — 진영별 2기, ATK=10 (게임시간 0s 비례)
+
+┌─ 초기 배치 (t=0s) ────────────────────────────────────────────────
+│  [Blue]
+│    Blue Outer Tower     [██████████████████████]  720/720  ATK  34  ALIVE
+│    Garen (Blue)         [██████████████████████]  380/380  ATK  76  ALIVE
+│    Minion#1 (Blue)      [██████████████████████]   70/70   ATK  10  ALIVE
+│    Minion#2 (Blue)      [██████████████████████]   70/70   ATK  10  ALIVE
+│  [Red]
+│    Red Outer Tower      [██████████████████████]  560/560  ATK  34  ALIVE
+│    Riven (Red)          [██████████████████████]  300/300  ATK  76  ALIVE
+│    Minion#3 (Red)       [██████████████████████]   70/70   ATK  10  ALIVE
+│    Minion#4 (Red)       [██████████████████████]   70/70   ATK  10  ALIVE
+└──────────────────────────────────────────────────────────────────
+  t= 2s  [DESPAWN] Minion#1 (Blue) 소멸 (부활 없음)
+  t= 2s  [DESPAWN] Minion#3 (Red) 소멸 (부활 없음)
+  t= 4s  [DEATH] Riven (Red) 사망 → 5s 후 부활 예약 (예정 t=9s)
+  t= 4s  [DESPAWN] Minion#2 (Blue) 소멸 (부활 없음)
+  t= 4s  [DESPAWN] Minion#4 (Red) 소멸 (부활 없음)
+  t= 8s  [SPAWN] 미니언 웨이브 — 진영별 2기, ATK=14 (게임시간 8s 비례)
+  t= 8s  [DESPAWN] Minion#7 (Red) 소멸 (부활 없음)
+  t= 9s  [DEATH] Garen (Blue) 사망 → 5s 후 부활 예약 (예정 t=14s)
+  t= 9s  [REVIVE] Riven (Red) 부활! HP 만피 복귀 (총 1회)
+  t= 9s  [DESPAWN] Minion#5 (Blue) 소멸 (부활 없음)
+  t= 9s  [DESPAWN] Minion#8 (Red) 소멸 (부활 없음)
+
+┌─ 챔피언 부활 직후 (t=9s) ────────────────────────────────────────────
+│  [Blue]
+│    Blue Outer Tower     [██████████████████████]  720/720  ATK  34  ALIVE
+│    Garen (Blue)         [░░░░░░░░░░░░░░░░░░░░░░]    0/380  ATK  76  REVIVING (5s)
+│    Minion#6 (Blue)      [██████████████████████]   70/70   ATK  14  ALIVE
+│  [Red]
+│    Red Outer Tower      [█████████░░░░░░░░░░░░░]  230/560  ATK  34  ALIVE
+│    Riven (Red)          [████████████████░░░░░░]  224/300  ATK  76  ALIVE
+└──────────────────────────────────────────────────────────────────
+  t=10s  [DESPAWN] Minion#6 (Blue) 소멸 (부활 없음)
+  t=14s  [REVIVE] Garen (Blue) 부활! HP 만피 복귀 (총 1회)
+  t=14s  [DEATH] Riven (Red) 사망 → 5s 후 부활 예약 (예정 t=19s)
+  t=16s  [SPAWN] 미니언 웨이브 — 진영별 2기, ATK=18 (게임시간 16s 비례)
+  t=16s  [DESPAWN] Minion#11 (Red) 소멸 (부활 없음)
+  t=17s  [DESPAWN] Minion#9 (Blue) 소멸 (부활 없음)
+  t=17s  [DESPAWN] Minion#12 (Red) 소멸 (부활 없음)
+  t=18s  [DESTROY] Red Outer Tower 영구 파괴! (IsPermanentlyDestroyed=True)
+  t=19s  [REVIVE] Riven (Red) 부활! HP 만피 복귀 (총 2회)
+  t=21s  [DEATH] Riven (Red) 사망 → 5s 후 부활 예약 (예정 t=26s)
+
+┌─ 종료 시점 (t=22s) ───────────────────────────────────────────────
+│  [Blue]
+│    Blue Outer Tower     [████████████░░░░░░░░░░]  390/720  ATK  34  ALIVE
+│    Garen (Blue)         [█████████░░░░░░░░░░░░░]  160/380  ATK  76  ALIVE
+│    Minion#10 (Blue)     [██████████████████████]   70/70   ATK  18  ALIVE
+│  [Red]
+│    Red Outer Tower      [░░░░░░░░░░░░░░░░░░░░░░]    0/560        DESTROYED (영구)
+│    Riven (Red)          [░░░░░░░░░░░░░░░░░░░░░░]    0/300  ATK  76  REVIVING (4s)
+└──────────────────────────────────────────────────────────────────
+
+╔══════════════════════════════════ 자기 검증 ══════════════════════════════╗
+  ✅  챔피언: 죽으면 일정 시간 후 '부활'
+        └ Reviving→Alive 전이 관측됨
+  ✅  미니언: 죽으면 '소멸'(영구)
+        └ Destroyed 전이 후 재등록 없음
+  ✅  미니언: 생성 시간 비례 공격력 (첫 10 → 마지막 18)
+        └ 후반 웨이브일수록 ATK 증가
+  ✅  타워: 죽으면 '영구 파괴'
+        └ IsPermanentlyDestroyed=true, 부활 경로 없음
+  ✅  HPBar: 유닛 의존성 0으로 임의 대상 HP 실시간 반영
+        └ 매 틱 HPBar.CurrentHP == Unit.Health.Current
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+  ✅ ALL REQUIREMENTS DEMONSTRATED — 설계가 의도대로 동작합니다.

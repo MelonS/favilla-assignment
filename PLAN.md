@@ -1,0 +1,47 @@
+# 파빌라(Favilla) 사전과제 — 진행 계획 / 체크리스트
+
+> MTM 프로젝트 인게임 유닛 **설계 능력** 테스트.
+> Champion / Minion / Tower 유닛 설계 + 유닛↔HPBar 디커플링 설계.
+> 컴파일 안 돼도 OK가 원칙이나 — **본 제출물은 실제로 빌드·실행·테스트까지 통과**시켜 기대 이상으로 검증한다.
+
+---
+
+## 0. 환경 확인 (완료)
+- [x] TODO 폴더 4개 파일 정독 (`사전 과제 설명.txt`, `BattleManager.cs`, `DummyMonoBehaviour.cs`, `HPBar.cs`)
+- [x] .NET Core 3.1 SDK / git / GitHub 토큰(repo scope, 계정 `MelonS`) 확인
+- [x] MelonS-Agents 저장소 관련성 검토
+
+## 1. 과제 분석 (핵심 요구사항)
+- [x] **필수 (1)** — Champion / Minion / Tower 클래스
+  - Champion : 죽으면 일정 시간 후 **부활**
+  - Minion   : 죽으면 **소멸** + 생성 시 `BattleManager.CurrentGameSeconds`에 비례해 **공격력 세팅**
+  - Tower    : 죽으면 **영구 파괴**
+- [x] **선택 (2)** — 유닛 → HPBar **의존성 0**인 채로, HPBar가 **임의 대상**의 최신 HP를 반영
+  - "보여주는(HPBar)" 객체와 "작동하는(코어 HP)" 객체의 책임 분리
+
+## 2. 설계 (핵심 — 채점 대상)
+- [x] `Health` 코어 + `IHealthReadOnly`(관찰 가능 추상) — 조합(composition)으로 HP 분리
+- [x] `Unit` 추상 기반 (DummyMonoBehaviour 상속) + `TakeDamage` / 사망 처리
+- [x] `Champion` / `Minion` / `Tower` — 사망 정책을 Template Method(`HandleDeath`)로 분기
+- [x] `BattleManager` 실시간 클럭 + 부활 스케줄러 (CurrentGameSeconds 실제 구동)
+- [x] `HPBar.Bind(IHealthReadOnly)` — Observer + DIP, 유닛은 HPBar를 전혀 모름
+- [x] 이벤트 구독/해제 라이프사이클 안전성 (메모리 누수 방지)
+
+## 3. +@ 실제 동작 검증 (기대 이상)
+- [x] 콘솔 시뮬레이션: Blue vs Red 전투 루프(Unity Update 모사) + ASCII HP 대시보드
+- [x] 세 가지 사망 행동 + 미니언 시간 비례 공격력 + HPBar 디커플링을 **실시간 시연**
+- [x] 자동화 테스트로 모든 요구사항 검증 (22개 통과 / 부활·소멸·영구파괴·시간비례·HPBar·구조 디커플링)
+
+## 4. 문서화
+- [x] `README.md` — Mermaid 클래스/시퀀스/상태 다이어그램, 설계 의사결정·트레이드오프, 실행법, 결과 캡처
+- [x] 폴더 구조 / 확장성 / 빌드·테스트 결과 시각화
+
+## 5. 배포
+- [ ] GitHub **public** 저장소 생성 + 코드 push
+- [ ] 제출용 단일 압축 파일(zip) 생성 + GitHub Release 첨부
+- [ ] README에 압축 파일 **다운로드 링크** 추가
+
+## 6. 마무리 검증
+- [x] `dotnet build` / `dotnet test` / 시뮬레이션 실행 전부 통과 (로컬)
+- [ ] GitHub Actions CI 그린 확인
+- [ ] README 링크·다이어그램 렌더링 확인

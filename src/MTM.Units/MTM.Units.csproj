@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    핵심 설계 라이브러리.
+    netstandard2.1 타깃 → Unity(2021+ .NET Standard 2.1 프로파일)에 그대로 드롭인 가능.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>MTM.Units</AssemblyName>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- 설계가 '실제로' 돌아가는지 검증하는 콘솔 시뮬레이션(+@). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>MTM.Simulation</AssemblyName>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTM.Units\MTM.Units.csproj" />
+  </ItemGroup>
+
+</Project>
