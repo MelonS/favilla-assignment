@@ -1,0 +1,77 @@
+<!-- @dsCard group="Foundations" name="Design Tokens & 의존 방향" subtitle="색·타이포 · 디커플링 다이어그램" -->
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"/>
+<title>MTM · Foundations</title>
+<style>
+  :root{
+    --bg:#0b1020;--panel:#121a2e;--line:#23304d;--ink:#e7eefb;--muted:#90a3c2;
+    --blue:#3b82f6;--red:#ef4444;--green:#22c55e;--amber:#f59e0b;--gray:#5b6b86;
+    --champ:#a78bfa;--minion:#38bdf8;--tower:#fb923c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Malgun Gothic",system-ui,sans-serif;padding:22px}
+  h1{font-size:18px;margin:0 0 4px}.sub{color:var(--muted);font-size:12.5px;margin-bottom:18px}
+  h2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}
+  .sw{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{width:120px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+  .chip .c{height:46px}.chip .l{padding:6px 8px;font-size:11px}.chip .l b{display:block}.chip .l span{color:var(--muted);font-size:10px}
+  .bars{display:flex;flex-direction:column;gap:8px;max-width:420px}
+  .bar{height:13px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#0a1120}
+  .bar i{display:block;height:100%}
+  .type div{margin:4px 0}
+  .mono{font-family:monospace}
+  .flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .node{padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;text-align:center;line-height:1.4}
+  .node.core{background:rgba(34,197,94,.1);border-color:var(--green)}
+  .node.abs{background:rgba(245,158,11,.12);border-color:var(--amber)}
+  .node.ui{background:rgba(59,130,246,.12);border-color:var(--blue)}
+  .arrow{color:var(--muted);font-size:12px;text-align:center}
+  .arrow b{display:block;color:var(--ink);font-size:16px}
+</style></head>
+<body>
+  <h1>MTM Design Tokens</h1>
+  <div class="sub">시뮬레이터·컴포넌트가 공유하는 색/타이포 토큰과, 설계의 핵심인 <b>의존 방향(디커플링)</b>.</div>
+
+  <h2>Core Palette</h2>
+  <div class="sw" id="pal"></div>
+
+  <h2>유닛 액센트</h2>
+  <div class="sw" id="unitpal"></div>
+
+  <h2>HP Fill — 임계 색상 (normalized)</h2>
+  <div class="bars">
+    <div class="bar"><i style="width:100%;background:linear-gradient(90deg,#16a34a,#22c55e)"></i></div>
+    <div class="bar"><i style="width:60%;background:linear-gradient(90deg,#16a34a,#22c55e)"></i></div>
+    <div class="bar"><i style="width:35%;background:linear-gradient(90deg,#d97706,#f59e0b)"></i></div>
+    <div class="bar"><i style="width:14%;background:linear-gradient(90deg,#dc2626,#ef4444)"></i></div>
+  </div>
+  <div class="sub mono" style="margin-top:8px">&gt;0.5 → green · 0.2~0.5 → amber · &lt;0.2 → red</div>
+
+  <h2>Typography</h2>
+  <div class="type">
+    <div style="font-size:22px;font-weight:700">22 / 700 — Title</div>
+    <div style="font-size:14px;font-weight:700">14 / 700 — Unit name</div>
+    <div style="font-size:12.5px;color:var(--muted)">12.5 / 400 — Muted body</div>
+    <div class="mono" style="font-size:11.5px;color:#cdd9f0">11.5 mono — code / hp text</div>
+  </div>
+
+  <h2>의존 방향 — 표시와 코어는 추상만 바라본다 (DIP)</h2>
+  <div class="flow">
+    <div class="node core">Unit ▸ Champion<br/>Minion ▸ Tower<br/><span style="color:var(--muted);font-size:11px">소유: Health</span></div>
+    <div class="arrow"><b>→</b>구현</div>
+    <div class="node abs">«interface»<br/>IHealthReadOnly<br/><span style="color:var(--muted);font-size:11px">Current·Max·Changed</span></div>
+    <div class="arrow"><b>←</b>Bind·구독</div>
+    <div class="node ui">HPBar<br/><span style="color:var(--muted);font-size:11px">보여주는 객체</span></div>
+  </div>
+  <div class="sub" style="margin-top:8px">유닛은 HPBar를 모르고, HPBar는 유닛 타입을 모른다 — 둘 다 가운데 추상에만 의존.</div>
+
+<script>
+  const core=[['--bg','#0b1020','bg'],['--panel','#121a2e','panel'],['--line','#23304d','line'],
+    ['--blue','#3b82f6','blue'],['--red','#ef4444','red'],['--green','#22c55e','green'],
+    ['--amber','#f59e0b','amber'],['--gray','#5b6b86','gray']];
+  const unit=[['--champ','#a78bfa','champion'],['--minion','#38bdf8','minion'],['--tower','#fb923c','tower']];
+  const card=(v,hex,name)=>`<div class="chip"><div class="c" style="background:${hex}"></div><div class="l"><b>${name}</b><span>${hex}</span></div></div>`;
+  document.getElementById('pal').innerHTML=core.map(c=>card(...c)).join('');
+  document.getElementById('unitpal').innerHTML=unit.map(c=>card(...c)).join('');
+</script>
+</body></html>

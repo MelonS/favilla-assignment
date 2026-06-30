@@ -1,0 +1,427 @@
+<!-- @dsCard group="Simulator" name="MTM Battle Visualizer" subtitle="C# 설계 포팅 · 라이브 자기검증" -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MTM Battle Visualizer</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#121a2e; --panel2:#0f1626; --line:#23304d;
+    --ink:#e7eefb; --muted:#90a3c2;
+    --blue:#3b82f6; --blue-dim:#1d2b52; --red:#ef4444; --red-dim:#4a1d24;
+    --green:#22c55e; --amber:#f59e0b; --gray:#5b6b86;
+    --champ:#a78bfa; --minion:#38bdf8; --tower:#fb923c;
+    --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.35);
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:radial-gradient(1200px 700px at 50% -10%,#16203a 0%,var(--bg) 60%);color:var(--ink);
+    font-family:"Segoe UI",Roboto,"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 40px;}
+  header h1{font-size:22px;margin:0;letter-spacing:.2px;display:flex;align-items:center;gap:10px}
+  header h1 .tag{font-size:11px;font-weight:600;color:var(--bg);background:linear-gradient(90deg,var(--blue),var(--champ));
+    padding:3px 9px;border-radius:999px}
+  header p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+  header p code{background:#0c1426;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#cdd9f0}
+
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0 14px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
+  button{font:inherit;font-weight:600;color:var(--ink);background:#1a2440;border:1px solid var(--line);
+    padding:9px 14px;border-radius:10px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+  button:hover{background:#22305a;border-color:#34467a}
+  button.primary{background:linear-gradient(90deg,var(--blue),#2563eb);border-color:transparent}
+  button.primary:hover{filter:brightness(1.08)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .spacer{flex:1}
+  .speed{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
+  .speed input{accent-color:var(--blue)}
+  .clock{font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;background:#0c1426;border:1px solid var(--line);
+    padding:8px 12px;border-radius:10px;min-width:92px;text-align:center}
+  .clock b{color:var(--champ)}
+
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:16px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+  .arena{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .team{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+  .team.blue{border-top:3px solid var(--blue)}
+  .team.red{border-top:3px solid var(--red)}
+  .team h2{margin:2px 2px 12px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+  .team.blue h2 span:first-child{color:#9cc2ff}
+  .team.red h2 span:first-child{color:#ff9ca6}
+  .minions-head{margin:14px 2px 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#64769a}
+
+  .unit{background:linear-gradient(180deg,#131d36,#0f1830);border:1px solid var(--line);border-radius:12px;
+    padding:11px 12px;margin-bottom:10px;position:relative;overflow:hidden;transition:.2s}
+  .unit.dead{opacity:.5;filter:grayscale(.6)}
+  .unit.reviving{border-color:var(--amber)}
+  .unit .row1{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .unit .ico{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#0c1426;border:1px solid var(--line);font-size:16px;flex:none}
+  .unit.champion .ico{box-shadow:inset 0 0 0 1px var(--champ)}
+  .unit.tower .ico{box-shadow:inset 0 0 0 1px var(--tower)}
+  .unit.minion .ico{box-shadow:inset 0 0 0 1px var(--minion)}
+  .unit .name{font-weight:700;font-size:13.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .unit .atk{font-size:11.5px;color:var(--muted);background:#0c1426;border:1px solid var(--line);padding:2px 7px;border-radius:7px;font-variant-numeric:tabular-nums}
+  .badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.04em}
+  .badge.alive{color:#bbf7d0;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.35)}
+  .badge.reviving{color:#fde68a;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.4)}
+  .badge.dead{color:#cbd5e1;background:rgba(100,116,139,.16);border:1px solid rgba(100,116,139,.4)}
+
+  .hpwrap{display:flex;align-items:center;gap:9px}
+  .hpbar{flex:1;height:13px;background:#0a1120;border:1px solid var(--line);border-radius:8px;overflow:hidden;position:relative}
+  .hpfill{height:100%;width:100%;border-radius:7px;transition:width .28s cubic-bezier(.4,0,.2,1),background .28s}
+  .hptext{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+  .minirow .ico{width:24px;height:24px;font-size:13px}
+  .minirow{padding:8px 10px}
+  .minirow .name{font-size:12px}
+
+  .side{display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .checks{display:flex;flex-direction:column;gap:9px}
+  .check{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.4}
+  .check .mark{width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;
+    background:#0c1426;border:1px solid var(--line);color:var(--gray);transition:.2s}
+  .check.on .mark{background:rgba(34,197,94,.18);border-color:var(--green);color:#86efac}
+  .check b{color:var(--ink)}
+  .check small{color:var(--muted)}
+  .allgood{margin-top:12px;text-align:center;font-weight:700;font-size:12.5px;padding:9px;border-radius:10px;
+    background:#0c1426;border:1px dashed var(--line);color:var(--muted);transition:.3s}
+  .allgood.on{background:rgba(34,197,94,.12);border:1px solid var(--green);color:#bbf7d0}
+
+  .log{height:228px;overflow:auto;display:flex;flex-direction:column;gap:5px;font-size:12px}
+  .log .e{display:flex;gap:8px;align-items:baseline;padding:5px 8px;border-radius:8px;background:#0c1426;border:1px solid var(--line);animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px)}to{opacity:1}}
+  .log .t{color:var(--muted);font-variant-numeric:tabular-nums;flex:none}
+  .log .k{font-weight:700;font-size:10px;padding:1px 6px;border-radius:6px;flex:none;letter-spacing:.03em}
+  .k.spawn{color:#cbd5e1;background:rgba(100,116,139,.18)}
+  .k.death{color:#fecaca;background:rgba(239,68,68,.16)}
+  .k.revive{color:#bbf7d0;background:rgba(34,197,94,.16)}
+  .k.despawn{color:#e9d5ff;background:rgba(167,139,250,.16)}
+  .k.destroy{color:#fed7aa;background:rgba(251,146,60,.18)}
+  .log .m{color:#d7e1f4}
+
+  footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center;line-height:1.7}
+  footer a{color:#9cc2ff;text-decoration:none}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .legend i{font-style:normal}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>⚔️ MTM Battle Visualizer <span class="tag">LIVE 검증</span></h1>
+    <p>
+      <code>Champion</code> · <code>Minion</code> · <code>Tower</code> 설계를 <b>그대로 JS로 포팅</b>해 브라우저에서 실행합니다.
+      HP 막대는 모두 <code>HPBar.bind(unit.health)</code> 관찰자로 구동 — 유닛은 막대를 모릅니다.
+      동일 로직의 <b>.NET 시뮬레이션/22 테스트</b>와 교차 검증되는 결정론적 시나리오입니다.
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <button id="play" class="primary">▶ 재생</button>
+    <button id="step">⏭ 한 틱</button>
+    <button id="reset">↺ 리셋</button>
+    <div class="speed">속도
+      <input id="speed" type="range" min="1" max="8" value="3" />
+      <span id="speedLabel">1.0×</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="clock">t = <b id="clock">0</b> s</div>
+  </div>
+
+  <div class="grid">
+    <div class="arena">
+      <div class="team blue">
+        <h2><span>BLUE</span><span id="blueStatus">전열</span></h2>
+        <div id="blue-tower"></div>
+        <div id="blue-champ"></div>
+        <div class="minions-head">미니언</div>
+        <div id="blue-minions"></div>
+      </div>
+      <div class="team red">
+        <h2><span>RED</span><span id="redStatus">전열</span></h2>
+        <div id="red-tower"></div>
+        <div id="red-champ"></div>
+        <div class="minions-head">미니언</div>
+        <div id="red-minions"></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h3>요구사항 자기검증</h3>
+        <div class="checks" id="checks"></div>
+        <div class="allgood" id="allgood">관찰 대기 중…</div>
+      </div>
+      <div class="card">
+        <h3>이벤트 로그</h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    동일한 설계가 .NET 콘솔/테스트와 이 웹 시뮬레이터에서 <b>똑같이</b> 동작합니다 —
+    이것이 설계의 이식성(portability) 증거입니다.<br/>
+    <a href="https://github.com/MelonS/favilla-assignment" target="_blank">github.com/MelonS/favilla-assignment</a>
+    <div class="legend" style="justify-content:center">
+      <i>🛡️ Champion(부활)</i><i>⚔️ Minion(소멸·시간비례 ATK)</i><i>🏰 Tower(영구파괴)</i>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================================
+   C# 설계의 충실한 JS 포팅 (Core/Battle/UI 그대로)
+   - Health : '작동하는 코어' — 값 규칙 + 변경 통지(Observer)
+   - HPBar  : '보여주는' 객체 — health.onChanged 구독, 유닛을 모름 (DIP)
+   - Unit/Champion/Minion/Tower : 사망 정책을 handleDeath 템플릿 메서드로 분기
+   - BattleManager : 게임시간 클럭 + 부활 스케줄러
+   ========================================================================== */
+
+class Health {
+  constructor(max){ this.max=Math.max(1,max); this.current=this.max; this._chg=[]; this._died=[]; }
+  get normalized(){ return this.max<=0?0:this.current/this.max; }
+  get isAlive(){ return this.current>0; }
+  onChanged(fn){ this._chg.push(fn); return ()=>{ this._chg=this._chg.filter(f=>f!==fn); }; }
+  onDied(fn){ this._died.push(fn); }
+  takeDamage(a){ if(a<=0||!this.isAlive) return; this._apply(this.current-a); if(!this.isAlive) this._died.forEach(f=>f()); }
+  heal(a){ if(a<=0||!this.isAlive) return; this._apply(this.current+a); }
+  resetToFull(){ this._apply(this.max); }
+  _apply(next){ const c=Math.max(0,Math.min(this.max,next)); if(c===this.current) return;
+    this.current=c; const snap={current:c,max:this.max,normalized:this.normalized};
+    this._chg.forEach(f=>f(snap)); }
+}
+
+/* HPBar — 임의 대상(IHealthReadOnly)에만 의존. 구체 유닛 타입을 모른다. */
+class HPBar {
+  constructor(fillEl,textEl){ this.fill=fillEl; this.text=textEl; this.source=null; this._off=null; }
+  bind(health){ this.unbind(); this.source=health;
+    this._off=health.onChanged(s=>this.refresh(s));
+    this.refresh({current:health.current,max:health.max,normalized:health.normalized}); }
+  unbind(){ if(this._off){ this._off(); this._off=null; } this.source=null; }
+  refresh(s){ const n=s.max<=0?0:s.current/s.max;
+    this.fill.style.width=(n*100).toFixed(1)+'%';
+    this.fill.style.background=n>0.5?'linear-gradient(90deg,#16a34a,#22c55e)'
+      :n>0.2?'linear-gradient(90deg,#d97706,#f59e0b)':'linear-gradient(90deg,#dc2626,#ef4444)';
+    this.text.textContent=`${s.current}/${s.max}`; }
+}
+
+const BattleManager = {
+  elapsed:0, _sched:[],
+  get currentGameSeconds(){ return Math.floor(this.elapsed); },
+  tick(dt){ if(dt<=0) return; this.elapsed+=dt;
+    for(let i=this._sched.length-1;i>=0;i--){ if(this._sched[i].due<=this.elapsed){ const cb=this._sched[i].cb; this._sched.splice(i,1); cb&&cb(); } } },
+  schedule(delay,cb){ this._sched.push({due:this.elapsed+Math.max(0,delay),cb}); },
+  reset(){ this.elapsed=0; this._sched=[]; }
+};
+
+const State={Spawning:'Spawning',Alive:'Alive',Reviving:'Reviving',Destroyed:'Destroyed'};
+
+class Unit {
+  constructor(name,maxHp){ this.name=name; this.health=new Health(maxHp); this.state=State.Spawning;
+    this.health.onDied(()=>this._onDied()); }
+  start(){ if(this.state===State.Spawning) this.state=State.Alive; }
+  takeDamage(a){ if(this.state!==State.Alive) return; this.health.takeDamage(a); }
+  attack(t){ if(this.state!==State.Alive||!t) return; t.takeDamage(this.attackDamage); }
+  _onDied(){ this.handleDeath(); }
+}
+class Champion extends Unit {
+  constructor(name,maxHp,level,reviveDelay){ super(name,maxHp); this.kind='champion'; this.icon='🛡️';
+    this.level=level; this.reviveDelay=reviveDelay; this.reviveCount=0; }
+  get attackDamage(){ return 60+(this.level-1)*8; }
+  handleDeath(){ this.state=State.Reviving; this.reviveAt=BattleManager.currentGameSeconds+this.reviveDelay;
+    BattleManager.schedule(this.reviveDelay,()=>{ this.health.resetToFull(); this.state=State.Alive; this.reviveCount++; this.reviveAt=null; }); }
+}
+class Minion extends Unit {
+  constructor(name,maxHp){ super(name,maxHp); this.kind='minion'; this.icon='⚔️';
+    this.spawnedAt=BattleManager.currentGameSeconds; this._atk=10+Math.floor(this.spawnedAt/2); }
+  get attackDamage(){ return this._atk; }
+  handleDeath(){ this.state=State.Destroyed; }
+}
+class Tower extends Unit {
+  constructor(name,maxHp,atk){ super(name,maxHp); this.kind='tower'; this.icon='🏰'; this._atk=atk; this.permanentlyDestroyed=false; }
+  get attackDamage(){ return this._atk; }
+  handleDeath(){ this.state=State.Destroyed; this.permanentlyDestroyed=true; }
+}
+
+/* ===================== 시뮬레이션 + 렌더링 ===================== */
+const WAVES=[0,8,16,24,32], MAXT=46;
+let actors=[], minionCounter=0, firstMinionAtk=null, lastMinionAtk=null, towerDeadAt=Infinity;
+let flags={revive:false,despawn:false,scaled:false,tower:false,hpbar:true};
+
+const $=id=>document.getElementById(id);
+
+function makeUnitDOM(actor,container,mini){
+  const el=document.createElement('div');
+  el.className='unit '+actor.unit.kind+(mini?' minirow':'');
+  el.innerHTML=`
+    <div class="row1">
+      <div class="ico">${actor.unit.icon}</div>
+      <div class="name">${actor.unit.name}</div>
+      <div class="atk">ATK ${actor.unit.attackDamage}</div>
+      <div class="badge alive">ALIVE</div>
+    </div>
+    <div class="hpwrap"><div class="hpbar"><div class="hpfill"></div></div><div class="hptext">0/0</div></div>`;
+  container.appendChild(el);
+  actor.el=el;
+  actor.badge=el.querySelector('.badge');
+  // HPBar를 DOM에 바인딩 — 관찰자 패턴으로 health 변화를 추종
+  actor.bar=new HPBar(el.querySelector('.hpfill'),el.querySelector('.hptext'));
+  actor.bar.bind(actor.unit.health);
+}
+
+function add(side,unit,mini){
+  unit.start();
+  const a={side,unit,prevState:unit.state,el:null,bar:null,badge:null};
+  actors.push(a);
+  const slot = unit.kind==='tower' ? side+'-tower' : unit.kind==='champion' ? side+'-champ' : side+'-minions';
+  makeUnitDOM(a,$(slot),mini);
+  return a;
+}
+
+function spawnWave(t){
+  ['blue','red'].forEach(side=>{
+    for(let i=0;i<2;i++){ minionCounter++;
+      const m=new Minion(`Minion#${minionCounter} (${side})`,70);
+      if(firstMinionAtk===null) firstMinionAtk=m.attackDamage; lastMinionAtk=m.attackDamage;
+      add(side,m,true);
+    }
+  });
+  logEvent(t,'spawn','SPAWN',`미니언 웨이브 — 진영별 2기, ATK=${10+Math.floor(t/2)} (게임시간 ${t}s 비례)`);
+}
+
+function chooseTarget(attacker){
+  const enemies=actors.filter(a=>a.side!==attacker.side && a.unit.state===State.Alive);
+  if(!enemies.length) return null;
+  const order = attacker.unit.kind==='champion' ? ['champion','minion','tower']
+              : attacker.unit.kind==='tower' ? ['minion','champion'] : ['minion','champion','tower'];
+  for(const k of order){
+    const pick=enemies.filter(e=>e.unit.kind===k).sort((a,b)=>a.unit.health.current-b.unit.health.current)[0];
+    if(pick) return pick;
+  }
+  return enemies[0];
+}
+
+function resolveCombat(){
+  const attackers=actors.filter(a=>a.unit.state===State.Alive);
+  for(const at of attackers){ if(at.unit.state!==State.Alive) continue;
+    const tg=chooseTarget(at); at.unit.attack(tg?tg.unit:null); }
+}
+
+function detectTransitions(t){
+  for(const a of actors){
+    const now=a.unit.state;
+    if(now===a.prevState) continue;
+    if(a.unit.kind==='champion'){
+      if(now===State.Reviving) logEvent(t,'death','DEATH',`${a.unit.name} 사망 → ${a.unit.reviveDelay}s 후 부활 예약`);
+      else if(a.prevState===State.Reviving && now===State.Alive){ flags.revive=true; logEvent(t,'revive','REVIVE',`${a.unit.name} 부활! HP 만피 복귀 (총 ${a.unit.reviveCount}회)`);}
+    } else if(a.unit.kind==='minion'){
+      if(now===State.Destroyed){ flags.despawn=true; logEvent(t,'despawn','DESPAWN',`${a.unit.name} 소멸 (부활 없음)`);}
+    } else if(a.unit.kind==='tower'){
+      if(now===State.Destroyed){ flags.tower=true; towerDeadAt=Math.min(towerDeadAt,t);
+        logEvent(t,'destroy','DESTROY',`${a.unit.name} 영구 파괴! (permanentlyDestroyed=${a.unit.permanentlyDestroyed})`);}
+    }
+    a.prevState=now;
+  }
+}
+
+function tickOnce(){
+  const t=BattleManager.currentGameSeconds+1;
+  if(t>MAXT || (flags.tower && t>towerDeadAt+3)){ pause(); return; }
+  BattleManager.tick(1);
+  if(WAVES.includes(t)) spawnWave(t);
+  resolveCombat();
+  // 매 틱 HPBar==Health 검증
+  for(const a of actors){ if(parseInt(a.bar.text.textContent)!==a.unit.health.current) flags.hpbar=false; }
+  if(lastMinionAtk>firstMinionAtk) flags.scaled=true;
+  detectTransitions(t);
+  render();
+}
+
+function render(){
+  $('clock').textContent=BattleManager.currentGameSeconds;
+  for(const a of actors){
+    if(!a.el) continue;
+    const u=a.unit, b=a.badge;
+    // 소멸한 미니언은 DOM에서 제거 — 재등록 없음(영구 소멸)
+    if(u.kind==='minion'&&u.state===State.Destroyed){ a.el.remove(); a.el=null; continue; }
+    const el=a.el;
+    el.classList.toggle('reviving',u.state===State.Reviving);
+    el.querySelector('.atk').textContent='ATK '+u.attackDamage;
+    if(u.state===State.Alive){ b.className='badge alive'; b.textContent='ALIVE'; }
+    else if(u.state===State.Reviving){ b.className='badge reviving';
+      const rem=Math.max(0,(u.reviveAt??0)-BattleManager.currentGameSeconds); b.textContent=`REVIVING ${rem}s`; }
+    else { el.classList.add('dead'); b.className='badge dead'; b.textContent = u.kind==='tower'?'DESTROYED 영구':'DESPAWNED'; }
+  }
+  renderChecks();
+}
+
+const CHECK_DEFS=[
+  ['revive','챔피언: 죽으면 일정 시간 후 부활','Reviving→Alive 전이 관측'],
+  ['despawn','미니언: 죽으면 소멸(영구)','Destroyed 후 재등록 없음'],
+  ['scaled','미니언: 생성 시간 비례 공격력','후반 웨이브일수록 ATK ↑'],
+  ['tower','타워: 죽으면 영구 파괴','permanentlyDestroyed=true'],
+  ['hpbar','HPBar: 유닛 의존성 0, HP 실시간 반영','매 틱 bar==health'],
+];
+function renderChecks(){
+  let all=true;
+  CHECK_DEFS.forEach(([key,title,sub])=>{
+    const on=flags[key]; if(!on) all=false;
+    const node=$('chk-'+key);
+    node.classList.toggle('on',!!on);
+    node.querySelector('.mark').textContent = on?'✓':'•';
+  });
+  const ag=$('allgood');
+  ag.classList.toggle('on',all);
+  ag.textContent = all?'✅ ALL REQUIREMENTS DEMONSTRATED':'관찰 진행 중…';
+}
+
+function logEvent(t,kind,tag,msg){
+  const e=document.createElement('div'); e.className='e';
+  e.innerHTML=`<span class="t">t=${String(t).padStart(2,' ')}s</span><span class="k ${kind}">${tag}</span><span class="m">${msg}</span>`;
+  const log=$('log'); log.appendChild(e); log.scrollTop=log.scrollHeight;
+}
+
+/* ===================== 라이프사이클 / 컨트롤 ===================== */
+let timer=null, speed=1;
+function buildChecks(){
+  const c=$('checks'); c.innerHTML='';
+  CHECK_DEFS.forEach(([key,title,sub])=>{
+    const d=document.createElement('div'); d.className='check'; d.id='chk-'+key;
+    d.innerHTML=`<div class="mark">•</div><div><b>${title}</b><br/><small>${sub}</small></div>`;
+    c.appendChild(d);
+  });
+}
+function setup(){
+  if(timer){clearInterval(timer);timer=null;}
+  actors=[]; minionCounter=0; firstMinionAtk=null; lastMinionAtk=null; towerDeadAt=Infinity;
+  flags={revive:false,despawn:false,scaled:false,tower:false,hpbar:true};
+  ['blue-tower','blue-champ','blue-minions','red-tower','red-champ','red-minions','log'].forEach(id=>$(id).innerHTML='');
+  BattleManager.reset();
+  add('blue',new Tower('Blue Outer Tower',720,34));
+  add('red', new Tower('Red Outer Tower',560,34));
+  add('blue',new Champion('Garen (Blue)',380,3,5));
+  add('red', new Champion('Riven (Red)',300,3,5));
+  spawnWave(0);
+  buildChecks();
+  render();
+  $('play').textContent='▶ 재생'; $('play').classList.add('primary');
+}
+function play(){ if(timer) return; $('play').textContent='⏸ 일시정지';
+  timer=setInterval(tickOnce,Math.round(700/speed)); }
+function pause(){ if(timer){clearInterval(timer);timer=null;} $('play').textContent='▶ 재생'; }
+
+$('play').onclick=()=>{ timer?pause():play(); };
+$('step').onclick=()=>{ pause(); tickOnce(); };
+$('reset').onclick=()=>{ setup(); };
+$('speed').oninput=e=>{ speed=parseInt(e.target.value)/2; $('speedLabel').textContent=speed.toFixed(1)+'×';
+  if(timer){pause();play();} };
+
+setup();
+$('speedLabel').textContent='1.5×'; speed=1.5; $('speed').value='3';
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!-- @dsCard group="Components" name="HP Bar" subtitle="관찰자 구동 · 임계색 · 인터랙티브" -->
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"/>
+<title>MTM · HP Bar</title>
+<style>
+  :root{--bg:#0b1020;--panel:#121a2e;--line:#23304d;--ink:#e7eefb;--muted:#90a3c2;--blue:#3b82f6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI","Malgun Gothic",system-ui,sans-serif;padding:22px}
+  h1{font-size:18px;margin:0 0 4px}.sub{color:var(--muted);font-size:12.5px;margin-bottom:18px;line-height:1.5}
+  code{background:#0c1426;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#cdd9f0;font-size:11.5px}
+  h2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:22px 0 12px}
+  .row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+  .lab{width:64px;font-size:12px;color:var(--muted)}
+  .bar{flex:1;max-width:360px;height:14px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#0a1120}
+  .bar i{display:block;height:100%;transition:width .3s,background .3s}
+  .hp{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;width:74px;text-align:right}
+  .demo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;max-width:480px}
+  input[type=range]{accent-color:var(--blue);width:100%}
+  .big{height:18px}
+</style></head>
+<body>
+  <h1>HP Bar 컴포넌트</h1>
+  <div class="sub">
+    <code>HPBar.bind(IHealthReadOnly)</code> 로 임의 대상에 부착되어, <code>Changed</code> 이벤트마다 자동 갱신됩니다.
+    유닛/챔피언/타워 같은 <b>구체 타입을 전혀 모릅니다</b>. 채움 비율에 따라 색이 바뀝니다.
+  </div>
+
+  <h2>States (normalized 임계색)</h2>
+  <div class="row"><div class="lab">100%</div><div class="bar"><i style="width:100%;background:linear-gradient(90deg,#16a34a,#22c55e)"></i></div><div class="hp">720/720</div></div>
+  <div class="row"><div class="lab">62%</div><div class="bar"><i style="width:62%;background:linear-gradient(90deg,#16a34a,#22c55e)"></i></div><div class="hp">446/720</div></div>
+  <div class="row"><div class="lab">34%</div><div class="bar"><i style="width:34%;background:linear-gradient(90deg,#d97706,#f59e0b)"></i></div><div class="hp">122/360</div></div>
+  <div class="row"><div class="lab">12%</div><div class="bar"><i style="width:12%;background:linear-gradient(90deg,#dc2626,#ef4444)"></i></div><div class="hp">36/300</div></div>
+  <div class="row"><div class="lab">0%</div><div class="bar"><i style="width:0%"></i></div><div class="hp">0/300</div></div>
+
+  <h2>인터랙티브 — 직접 데미지를 줘보세요</h2>
+  <div class="demo">
+    <div class="row"><div class="lab">HP</div><div class="bar big"><i id="liveFill"></i></div><div class="hp" id="liveHp">100/100</div></div>
+    <input id="dmg" type="range" min="0" max="100" value="0" />
+    <div class="sub" style="margin:8px 0 0">데미지: <b id="dmgVal">0</b> → Health.takeDamage() → Changed → HPBar.refresh()</div>
+  </div>
+
+<script>
+  // 데모용 미니 Health + HPBar (시뮬레이터와 동일한 관찰자 패턴)
+  class Health{constructor(m){this.max=m;this.current=m;this._c=[]}onChanged(f){this._c.push(f)}
+    set(v){this.current=Math.max(0,Math.min(this.max,v));const n=this.current/this.max;this._c.forEach(f=>f({current:this.current,max:this.max,n}))}}
+  const fill=document.getElementById('liveFill'), hp=document.getElementById('liveHp');
+  const bar={refresh(s){fill.style.width=(s.n*100)+'%';
+    fill.style.background=s.n>0.5?'linear-gradient(90deg,#16a34a,#22c55e)':s.n>0.2?'linear-gradient(90deg,#d97706,#f59e0b)':'linear-gradient(90deg,#dc2626,#ef4444)';
+    hp.textContent=s.current+'/'+s.max;}};
+  const h=new Health(100); h.onChanged(s=>bar.refresh(s)); h.set(100);
+  document.getElementById('dmg').oninput=e=>{const d=+e.target.value;document.getElementById('dmgVal').textContent=d;h.set(100-d);};
+</script>
+</body></html>

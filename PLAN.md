@@ -48,8 +48,18 @@
 
 ---
 
+## 7. 라이브 시각화 (추가 목표 — 정밀 검증 + 실행 가능)
+- [x] C# 설계를 JS로 포팅한 **인터랙티브 전투 시뮬레이터** (`design/simulator/index.html`)
+- [x] 디자인 시스템 컴포넌트: 토큰 / HP바(인터랙티브) / 유닛카드
+- [x] **Claude Design** 디자인 시스템 프로젝트 생성 + 4개 파일 동기화
+- [x] **실제 브라우저(headless Edge) 렌더로 검증** → `VERIFY PASS {5개 전부 true}`
+- [x] README 라이브 시각화 섹션 + 스크린샷, `design/README.md`
+
+---
+
 ## ✅ 최종 산출물
 - **저장소(public):** https://github.com/MelonS/favilla-assignment
 - **제출 zip:** https://github.com/MelonS/favilla-assignment/releases/latest/download/favilla-assignment-submission.zip
 - **핵심 설계:** Champion/Minion/Tower (사망 정책 분기) + 유닛↔HPBar 디커플링(Observer+DIP)
 - **+@:** 결정론적 콘솔 시뮬레이션(자기검증), xUnit 22개(행동+구조), CI(windows-latest)
+- **라이브 시각화:** `design/simulator/index.html` (브라우저 실행) + Claude Design 동기화

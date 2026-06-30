@@ -64,6 +64,30 @@ dotnet test
 
 ---
 
+## 🕹️ 라이브 시각화 (인터랙티브 · 브라우저에서 바로 실행)
+
+> **정밀 검증용 시각화.** 동일한 설계를 **JS로 그대로 포팅**해, 설치 없이 브라우저에서 직접 조작·검증할 수 있습니다.
+> 화면의 모든 HP 막대는 `HPBar.bind(unit.health)` **관찰자**로 구동되고(유닛은 막대를 모름), 시나리오는 .NET 시뮬레이션과 **결정론적으로 동일**합니다.
+
+![MTM Battle Visualizer](docs/visualizer.png)
+
+```bash
+# 설치 불필요 — 파일을 브라우저로 열기만:
+design/simulator/index.html        # ▶ 재생 / 한 틱 / 리셋 / 속도 · 라이브 자기검증 패널
+```
+
+- **▶ 재생/한 틱/리셋·속도** 컨트롤로 챔피언 부활·미니언 소멸·타워 영구파괴를 눈으로 추적
+- 우측 **자기검증 패널**이 5개 요구사항을 라이브로 ✅ 처리 → 실제 브라우저에서 `VERIFY PASS` 확인 완료
+- 이 시각화는 **[Claude Design](https://claude.ai/design) 디자인 시스템**으로 제작/동기화되었습니다 — 토큰·HP바·유닛카드 컴포넌트로 구성:
+
+| <img src="docs/design-tokens.png" width="380"/> | <img src="docs/unit-cards.png" width="380"/> |
+|:--:|:--:|
+| **Foundations** — 색/타이포 토큰 + 의존 방향(DIP) | **Components** — Champion/Minion/Tower × 상태 |
+
+> 동일 설계가 **.NET(콘솔·22 테스트)** 과 **웹(브라우저)** 에서 똑같이 동작 — 설계 이식성(portability)의 증거입니다.
+
+---
+
 ## 🗂️ 프로젝트 구조
 
 ```
@@ -85,8 +109,14 @@ favilla-assignment/
 │  └─ MTM.Simulation/             # ➕ 콘솔 전투 시뮬레이션 (검증용)
 ├─ tests/
 │  └─ MTM.Units.Tests/            # ➕ xUnit 22개 (행동 + 구조 검증)
+├─ design/                        # ➕ 라이브 시각화 (Claude Design 디자인 시스템)
+│  ├─ simulator/index.html        #    인터랙티브 전투 시뮬레이터 (브라우저 실행)
+│  ├─ components/hp-bar.html      #    HP바 컴포넌트 (관찰자 · 인터랙티브)
+│  ├─ components/unit-card.html   #    유닛 카드 (Champion/Minion/Tower × 상태)
+│  └─ foundations/tokens.html     #    색·타이포 토큰 + 의존 방향(DIP)
 ├─ docs/
-│  └─ sample-run.txt              # 시뮬레이션 전체 트랜스크립트
+│  ├─ sample-run.txt              # 콘솔 시뮬레이션 전체 트랜스크립트
+│  └─ visualizer.png              # 시각화 캡처
 └─ TODO/                          # 과제 원본 제공 파일
 ```
 
